@@ -1,0 +1,25 @@
+-- Drop table
+DROP TABLE script;
+
+-- Create table to store inputs
+CREATE TABLE script (Character string, Dialogue string)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
+TBLPROPERTIES ("skip.header.line.count"="2");
+
+-- Load Data from files
+LOAD DATA LOCAL INPATH '/root/inputs/' INTO TABLE script; 
+
+-- view input
+-- SELECT * from script;
+-- Drop table
+-- DROP TABLE word_count;
+-- CREATE TABLE word_count AS
+
+-- Process the data
+INSERT OVERWRITE LOCAL DIRECTORY '/root/HiveProjOp'
+SELECT Character, count(*) AS count FROM script
+GROUP BY Character
+ORDER BY count DESC;
+
+-- View Result
+SELECT * FROM word_count;
